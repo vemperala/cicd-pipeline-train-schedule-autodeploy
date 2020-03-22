@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        //be sure to replace "willbla" with your own Docker Hub username
-        DOCKER_IMAGE_NAME = "willbla/train-schedule"
+        DOCKER_IMAGE_NAME = "vemperala/train-schedule"
     }
     stages {
         stage('Build') {
@@ -14,7 +13,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             when {
-                branch 'master'
+                branch 'new-code'
             }
             steps {
                 script {
@@ -27,7 +26,7 @@ pipeline {
         }
         stage('Push Docker Image') {
             when {
-                branch 'master'
+                branch 'new-code'
             }
             steps {
                 script {
@@ -40,7 +39,7 @@ pipeline {
         }
         stage('CanaryDeploy') {
             when {
-                branch 'master'
+                branch 'new-code'
             }
             environment { 
                 CANARY_REPLICAS = 1
@@ -55,7 +54,7 @@ pipeline {
         }
         stage('DeployToProduction') {
             when {
-                branch 'master'
+                branch 'new-code'
             }
             environment { 
                 CANARY_REPLICAS = 0
